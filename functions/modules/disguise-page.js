@@ -1,52 +1,29 @@
 /**
  * 伪装页面渲染模块
  * 当浏览器访问订阅链接时显示的伪装页面
-/**
- * 伪装页面渲染模块
- * 当浏览器访问订阅链接时显示的伪装页面
+ * 精确还原 nginx 默认错误页格式
  */
 
 /**
- * 渲染默认伪装页面
+ * 渲染 nginx 风格默认伪装页面
  * @returns {Response} HTML响应
  */
 export function renderDisguisePage() {
-    const html = `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>404 Not Found</title>
-    <style>
-        body {
-            width: 35em;
-            margin: 0 auto;
-            font-family: Tahoma, Verdana, Arial, sans-serif;
-        }
-
-        h1 {
-            margin-top: 2em;
-        }
-
-        h1,
-        p {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <h1>404 Not Found</h1>
-    <p>The requested URL was not found on this server.</p>
-    <hr>
-    <p>nginx</p>
-</body>
-</html>
-    `;
+    // 精确还原 nginx 默认 404 错误页 HTML
+    const html = `<html>\r
+<head><title>404 Not Found</title></head>\r
+<body>\r
+<center><h1>404 Not Found</h1></center>\r
+<hr><center>nginx</center>\r
+</body>\r
+</html>\r
+`;
 
     return new Response(html, {
         status: 404,
         headers: {
-            'Content-Type': 'text/html; charset=utf-8',
-            'Cache-Control': 'no-cache'
+            'Content-Type': 'text/html',
+            'Server': 'nginx',
         }
     });
 }
@@ -63,7 +40,10 @@ export function createDisguiseResponse(disguiseConfig, baseUrl) {
         if (redirectUrl) {
             return new Response(null, {
                 status: 302,
-                headers: { Location: redirectUrl }
+                headers: {
+                    Location: redirectUrl,
+                    'Server': 'nginx',
+                }
             });
         }
     }

@@ -6,6 +6,7 @@ import { fetchInitialData, login as apiLogin, fetchPublicConfig } from '../lib/a
 import { api } from '../lib/http.js';
 import { handleError } from '../utils/errorHandler.js';
 import { useDataStore } from './useDataStore';
+import { injectAppHead, resetToDisguise } from '../utils/dynamic-head';
 
 export const useSessionStore = defineStore('session', () => {
   const sessionState = ref('loading'); // loading, loggedIn, loggedOut
@@ -39,6 +40,8 @@ export const useSessionStore = defineStore('session', () => {
       dataStore.hydrateFromData(dataResult.data);
 
       sessionState.value = 'loggedIn';
+      // 登录成功后恢复应用头部元素（favicon、manifest 等）
+      injectAppHead();
     } else {
       // Auth failed or other error
       if (dataResult.errorType === 'auth') {
@@ -78,6 +81,8 @@ export const useSessionStore = defineStore('session', () => {
     }
     sessionState.value = 'loggedOut';
     initialData.value = null;
+    // 退出登录后切换到伪装状态
+    resetToDisguise();
 
     // 清除缓存数据
     const dataStore = useDataStore();

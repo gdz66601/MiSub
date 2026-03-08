@@ -78,6 +78,12 @@ export async function corsMiddleware(request, next, options = {}) {
 export async function securityHeadersMiddleware(request, next) {
     const response = await next();
 
+    // 伪装响应（带 Server: nginx 头）跳过安全头注入
+    // 真正的 nginx 默认错误页不包含这些头，添加会暴露特征
+    if (response.headers.get('Server') === 'nginx') {
+        return response;
+    }
+
     // 设置安全相关的HTTP头部
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('X-Frame-Options', 'DENY');
