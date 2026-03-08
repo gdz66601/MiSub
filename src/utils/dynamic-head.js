@@ -46,21 +46,12 @@ export function resetToDisguise() {
     // 移除所有 favicon 相关 link（静态 + 动态）
     document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
 
-    // 注入透明空白 favicon，覆盖浏览器缓存和自动发现
-    // 1x1 透明 PNG data URI
+    // 注入空白 favicon，覆盖浏览器缓存和自动发现
     const blankFavicon = document.createElement('link');
     blankFavicon.setAttribute(DYNAMIC_ATTR, '');
     blankFavicon.rel = 'icon';
-    blankFavicon.type = 'image/png';
-    blankFavicon.href = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==';
+    blankFavicon.href = 'data:,';
     document.head.appendChild(blankFavicon);
-    // 同时设置 shortcut icon 兼容旧浏览器
-    const blankShortcut = document.createElement('link');
-    blankShortcut.setAttribute(DYNAMIC_ATTR, '');
-    blankShortcut.rel = 'shortcut icon';
-    blankShortcut.type = 'image/x-icon';
-    blankShortcut.href = 'data:image/x-icon;base64,AAABAAEAAQEAAAEAGAAwAAAAFgAAACgAAAABAAAAAgAAAAEAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP8AAAA=';
-    document.head.appendChild(blankShortcut);
 
     // 移除 manifest
     document.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
