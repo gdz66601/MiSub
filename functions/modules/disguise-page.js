@@ -11,7 +11,7 @@
 export function renderDisguisePage() {
     // 精确还原 nginx 默认 404 错误页 HTML
     const html = `<html>\r
-<head><title>404 Not Found</title></head>\r
+<head><title>404 Not Found</title><link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="></head>\r
 <body>\r
 <center><h1>404 Not Found</h1></center>\r
 <hr><center>nginx</center>\r
